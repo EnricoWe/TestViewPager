@@ -7,6 +7,8 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 
 public class MainActivity extends FragmentActivity {
 
@@ -22,6 +24,11 @@ public class MainActivity extends FragmentActivity {
     private ViewPager mPager;
 
     /**
+     * View to contain the dots
+     */
+    private ViewGroup mDotsLayout;
+
+    /**
      * The pager adapter, which provides the pages to the view pager widget.
      */
     private PagerAdapter mPagerAdapter;
@@ -31,10 +38,52 @@ public class MainActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mDotsLayout = (ViewGroup) findViewById(R.id.dots);
+
+        drawDots(0);
+
         // Instantiate a ViewPager and a PagerAdapter.
         mPager = (ViewPager) findViewById(R.id.viewpager);
         mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
         mPager.setAdapter(mPagerAdapter);
+
+        mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                drawDots(position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
+    }
+
+    /**
+     * Adds dots to the Linearlayout according to the position of the ViewPager
+     */
+    private void drawDots(int position){
+        mDotsLayout.removeAllViews();
+        for (int i = 0; i < NUM_PAGES; i++){
+            if (i == position) {
+                ImageView dotDark = new ImageView(this);
+                dotDark.setImageResource(R.drawable.dot_dark);
+                dotDark.setPadding(2,0,0,0);
+                mDotsLayout.addView(dotDark);
+            } else {
+                ImageView dotLight = new ImageView(this);
+                dotLight.setImageResource(R.drawable.dot_light);
+                dotLight.setPadding(2,0,0,0);
+                mDotsLayout.addView(dotLight);
+            }
+        }
     }
 
     /**
